@@ -1,3 +1,19 @@
+import { Champ } from "./champs/Champ.js";
+import { Background } from "./ui/basic-ui.js";
+/** 
+const jinx= new Champ("Arcade Jinx", 50, 20, 5);
+console.log(jinx);
+console.log(jinx.name);
+jinx.attack();
+
+const jax= new Champ("Arcade Jax", 50, 20, 5);
+console.log(jax);
+console.log(jax.name);
+jax.attack();
+*/
+
+const background = new Background();
+console.log(background)
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 
@@ -28,18 +44,8 @@ const teemo ={
 */
 
 
-
-
-
-
-
-
-ctx.fillStyle = "white";
-ctx.fillRect(0,0,1280,720)
-
-
 const gameLoop = () =>{
-    console.log(keys);
+    //console.log(keys);
     //resize canvas
     resizeCanvas();
 
@@ -62,8 +68,7 @@ const resizeCanvas= () =>{
 }
 
 const clearCanvas = () => {
-    ctx.fillStyle = "white";
-    ctx.fillRect(0,0,1280,720)
+    background.draw(ctx);
 }
 
 const update = () => {
@@ -82,3 +87,4 @@ window.onload = () => {
     window.requestAnimationFrame(gameLoop);
 
 }
+
