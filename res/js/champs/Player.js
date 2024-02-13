@@ -1,5 +1,6 @@
 export class Player {
     constructor(){
+        this.hp = 100;
         this.img = new Image();
         this.path = "./res/img/champs/teemo.png";
         this.img.src = this.path;
@@ -28,11 +29,30 @@ export class Player {
             this.size.width,
             this.size.height
         );
+            ctx.save();//ulozi soucasny stav stetce
+            ctx.fillStyle = "red";
+            ctx.fillRect(
+                (this.position.x - this.size.width / 2) +88 ,
+                this.position.y + this.size.height + 10,
+                this.hp,
+                20
+            );
+            ctx.lineWidth = 3;
+            ctx.strokeStyle = "black";
+            ctx.strokeRect(
+                (this.position.x - this.size.width / 2) +88 ,
+                this.position.y + this.size.height + 10,
+                100,
+                20
+            );
+
+            
+            ctx.restore(); //vrati stav do predchozího ulozeneho stavu
     }
 
-    update(keys,ctx){
+    update(keys){
         this.movement(keys);
-        this.attack(keys,ctx);
+        this.attack(keys);
     }
 
     movement(keys) {
@@ -49,7 +69,7 @@ export class Player {
         }
     }
 
-    attack(keys,ctx){
+    attack(keys){
         if (keys["Space"] && this.canShoot){
             this.canShoot = false;
             this.dart.x = this.position.x + this.size.width /2 - 5;
@@ -57,28 +77,33 @@ export class Player {
             this.dart.width = 10;
             this.dart.height = 20;
             this.dart.type = 0;
-            this.dart.ctx = ctx
+            this.dart.dmg = 10;
             this.dart.shoot(this);
-
         }
     }
 }
 
 class Dart {
-
     constructor() {
-        this.velocity=0.005;
+        this.velocity = 2;
+        this.hit = false;
     }
 
-    shoot(player){
+    async shoot(player){
         this.y -= this.velocity;
-        this.ctx.fillStyle = "red";
-        this.ctx.fillRect(this.x, this.y, this.width,this.height);
-        
-        if (this.y>0){
+        await new Promise((resolve) => setTimeout(resolve, 1));
+        if (this.hit) {
+            this.hit= false;
+            return (player.canShoot = true);
+        }
+        if (this.y + this.height > 0){
             return this.shoot(player);
         }
         player.canShoot =true;
     }
 
+    draw(ctx){
+        ctx.fillStyle = "red";
+        ctx.fillRect(this.x, this.y, this.width,this.height); 
+    }
 }
